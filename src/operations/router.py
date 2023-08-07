@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/get_specific")
 async def get_specific_operations(operation_type: str,
                                   session: AsyncSession = Depends(get_async_session)):
     query = select(operation).where(operation.c.type == operation_type).limit(2)
@@ -28,6 +28,21 @@ async def get_specific_operations(operation_type: str,
             "details": None,
         }
     raise HTTPException(status_code=404, detail="Item not found")
+
+
+@router.get("/get_all")
+async def get_all_operations(session: AsyncSession = Depends(get_async_session)):
+    query = select(operation)
+    print(query)
+    result = await session.execute(query)
+    result_as_dict = result.mappings().all()
+    if result_as_dict:
+        return {
+            "status": "success",
+            "data": result_as_dict,
+            "details": None,
+        }
+    raise HTTPException(status_code=404, detail="Items not found")
 
 
 @router.post("/")

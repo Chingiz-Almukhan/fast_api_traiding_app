@@ -2,9 +2,10 @@ import smtplib
 from email.message import EmailMessage
 
 from celery import Celery
-from config import SMTP_USER, SMTP_PASSWORD
+from config import SMTP_USER, SMTP_PASSWORD, REDIS_HOST, REDIS_PORT
 
-celery = Celery("tasks", broker="redis://localhost:6379")
+redis_url = f"redis://{REDIS_HOST}:{REDIS_PORT}"
+celery = Celery("tasks", broker=redis_url)
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 465
 

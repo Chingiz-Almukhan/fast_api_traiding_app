@@ -10,6 +10,7 @@ from fastapi_cache.decorator import cache
 
 from auth.base_config import auth_backend, fastapi_users
 from auth.schemas import UserRead, UserCreate
+from config import REDIS_HOST, REDIS_PORT
 
 from operations.router import router as operation_router
 
@@ -60,5 +61,5 @@ app.include_router(router_chat)
 
 @app.on_event("startup")
 async def startup_event():
-    redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
